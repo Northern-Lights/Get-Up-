@@ -155,6 +155,7 @@ class ActivityMonitor: NSObject {
 		NSLog("globalMonitorHandler()")
 		activityInInterval = true
 		activityCount++
+		activityCount += inactivityCount	//If inactive for a few counts, add back when we become active again.
 		inactivityCount = 0
 		
 		NSLog("\tActivity Count: %d/%d", activityCount, actionInterval)
