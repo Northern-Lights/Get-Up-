@@ -34,6 +34,9 @@ class ActivityMonitor: NSObject {
 	//Types of events we consider to be "activity"
 	let eventsToWatch: NSEventMask =
 		NSEventMask.MouseMovedMask |
+		NSEventMask.LeftMouseDownMask |
+		NSEventMask.RightMouseDownMask |
+		NSEventMask.CursorUpdateMask |
 		NSEventMask.FlagsChangedMask |	//Modifier keys only. Printing/char keys require root.
 		NSEventMask.ScrollWheelMask
 	
