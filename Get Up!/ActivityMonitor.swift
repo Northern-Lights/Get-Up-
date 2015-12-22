@@ -114,8 +114,9 @@ class ActivityMonitor: NSObject {
 	func markActivity() -> Void {
 		
 		//Activity was handled by the globalMonitorHandler.
-		//Inactivity needs to be handled here.
-		if (!activityInInterval) {
+		//Inactivity needs to be handled here, but only if
+		//threshold > 0 so that we can use 0 for "no threshold"
+		if (!activityInInterval && inactivityThreshold > 0) {
 			inactivityCount++
 			NSLog("markActivity() -> Inactive")
 			NSLog("\tInactivity Count: %d/%d", inactivityCount, inactivityThreshold)

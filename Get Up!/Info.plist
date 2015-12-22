@@ -30,7 +30,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>NSUserNotificationAlertStyle</key>
-	<string>alert</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.healthcare-fitness</string>
+	<key>LSBackgroundOnly</key>
+	<true/>
 </dict>
 </plist>
