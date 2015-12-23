@@ -134,7 +134,7 @@ class ActivityMonitor: NSObject {
 		//If the user is inactive, then reset these counts
 		//and disable the timer. Let the handler reinstate it on
 		//the next activity.
-		if (inactivityCount >= inactivityThreshold) {
+		if (inactivityCount >= inactivityThreshold && inactivityThreshold > 0) {
 			NSLog("markActivity() -> passed inactivityThreshold")
 			activityCount = 0
 			inactivityCount = 0
