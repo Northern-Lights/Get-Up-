@@ -27,7 +27,7 @@ class NotificationAlerter: NSObject, MonitorActionable {
 	 */
 	func action() -> Void {
 		NSLog("action()")
-		var notification = NSUserNotification();
+		let notification = NSUserNotification();
 		notification.title = "Get up!"
 		notification.informativeText = "Get your fat ass moving!"
 		notification.hasActionButton = false
