@@ -33,12 +33,12 @@ class ActivityMonitor: NSObject {
 	
 	//Types of events we consider to be "activity"
 	let eventsToWatch: NSEventMask =
-		NSEventMask.MouseMovedMask |
-		NSEventMask.LeftMouseDownMask |
-		NSEventMask.RightMouseDownMask |
-		NSEventMask.CursorUpdateMask |
-		NSEventMask.FlagsChangedMask |	//Modifier keys only. Printing/char keys require root.
-		NSEventMask.ScrollWheelMask
+		[NSEventMask.MouseMovedMask,
+		 NSEventMask.LeftMouseDownMask,
+		 NSEventMask.RightMouseDownMask,
+		 NSEventMask.CursorUpdateMask,
+		 NSEventMask.FlagsChangedMask,	//Modifier keys only. Printing/char keys require root.
+		 NSEventMask.ScrollWheelMask]
 	
 	//The monitor that tracks "activity"
 	var eventMonitor: AnyObject?
@@ -86,7 +86,7 @@ class ActivityMonitor: NSObject {
 	private func setTimers() -> Void {
 		
 		//Set the activityMonitor timer
-		var interval: NSTimeInterval = Double(monitorInterval * 60)
+		let interval: NSTimeInterval = Double(monitorInterval * 60)
 		timer = NSTimer.scheduledTimerWithTimeInterval(
 			interval,
 			target: self,

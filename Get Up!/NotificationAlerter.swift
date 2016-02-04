@@ -27,7 +27,7 @@ class NotificationAlerter: NSObject, MonitorActionable {
 	 */
 	func action() -> Void {
 		NSLog("action()")
-		var notification = NSUserNotification();
+		let notification = NSUserNotification();
 		notification.title = "Get up!"
 		notification.informativeText = "Get your fat ass moving!"
 		notification.hasActionButton = false
@@ -49,15 +49,15 @@ class NotificationAlerter: NSObject, MonitorActionable {
 		NSObject, NSUserNotificationCenterDelegate {
 		
 		//Why is the default for these methods private?
-		func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
+		@objc func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
 			NSLog("delegate: activate")
 		}
 		
-		func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
+		@objc func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
 			NSLog("delegate: did deliver")
 		}
 		
-		func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
+		@objc func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
 			NSLog("delegate: should deliver")
 			return true
 		}
