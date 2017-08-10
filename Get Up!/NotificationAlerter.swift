@@ -15,8 +15,8 @@ import Foundation
  */
 class NotificationAlerter: NSObject, MonitorActionable {
 	
-	var notificationCenter = NSUserNotificationCenter.defaultUserNotificationCenter()
-	private var delegate = NotificationCenterDelegate()
+	var notificationCenter = NSUserNotificationCenter.default
+	fileprivate var delegate = NotificationCenterDelegate()
 	
 	override init() {
 		notificationCenter.delegate = delegate
@@ -27,11 +27,11 @@ class NotificationAlerter: NSObject, MonitorActionable {
 	 */
 	func action() -> Void {
 		NSLog("action()")
-		var notification = NSUserNotification();
+		let notification = NSUserNotification();
 		notification.title = "Get up!"
 		notification.informativeText = "Get your fat ass moving!"
 		notification.hasActionButton = false
-		notificationCenter.deliverNotification(notification)
+		notificationCenter.deliver(notification)
 	}
 	
 	/*
@@ -44,20 +44,20 @@ class NotificationAlerter: NSObject, MonitorActionable {
 	}
 	
 	//The delegate to perform actions if/when any notification buttons are pressed.
-	private
+	fileprivate
 	class NotificationCenterDelegate:
 		NSObject, NSUserNotificationCenterDelegate {
 		
 		//Why is the default for these methods private?
-		func userNotificationCenter(center: NSUserNotificationCenter, didActivateNotification notification: NSUserNotification) {
+		func userNotificationCenter(_ center: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
 			NSLog("delegate: activate")
 		}
 		
-		func userNotificationCenter(center: NSUserNotificationCenter, didDeliverNotification notification: NSUserNotification) {
+		func userNotificationCenter(_ center: NSUserNotificationCenter, didDeliver notification: NSUserNotification) {
 			NSLog("delegate: did deliver")
 		}
 		
-		func userNotificationCenter(center: NSUserNotificationCenter, shouldPresentNotification notification: NSUserNotification) -> Bool {
+		func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
 			NSLog("delegate: should deliver")
 			return true
 		}

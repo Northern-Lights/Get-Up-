@@ -22,7 +22,7 @@ import AppKit
  */
 class ActivityMonitor: NSObject {
 	
-	var timer: NSTimer!					//Timer for monitoring activity
+	var timer: Timer!					//Timer for monitoring activity
 	var monitorInterval: Int
 	var actionInterval: Int				//Interval at which the actions will be executed
 	var activityCount: Int
@@ -32,15 +32,15 @@ class ActivityMonitor: NSObject {
 	var actionable: MonitorActionable?	//The object that will be able to take an action
 	
 	//Types of events we consider to be "activity"
-	let eventsToWatch: NSEventMask =
-		NSEventMask.MouseMovedMask |
-		NSEventMask.FlagsChangedMask |	//Modifier keys only. Printing/char keys require root.
-		NSEventMask.ScrollWheelMask
-	
+//	let eventsToWatch: EventTypeMask =
+//		NSEvent.EventTypeMask.mouseMoved |
+//		NSEvent.EventTypeMask.flagsChanged |	//Modifier keys only. Printing/char keys require root.
+//		NSEvent.EventTypeMask.scrollWheel
+
 	//The monitor that tracks "activity"
 	var eventMonitor: AnyObject?
 	
-	init(let _actionInterval: Int, let _monitorInterval: Int, let _inactivityThreshold: Int) {
+	init(_actionInterval: Int, _monitorInterval: Int, _inactivityThreshold: Int) {
 		actionInterval = _actionInterval
 		monitorInterval = _monitorInterval
 		inactivityThreshold = _inactivityThreshold
@@ -51,14 +51,15 @@ class ActivityMonitor: NSObject {
 		super.init()
 		
 		setTimers()
-		eventMonitor = NSEvent.addGlobalMonitorForEventsMatchingMask(
-			eventsToWatch,
-			handler: globalMonitorHandler)
+		eventMonitor = NSEvent.addGlobalMonitorForEvents(
+//			matching: eventsToWatch,
+			matching: [.mouseMoved, .flagsChanged, .scrollWheel, .leftMouseDown],
+			handler: globalMonitorHandler) as AnyObject
 		
 		NSLog("ActivityMonitor: initialized")
 	}
 	
-	func registerNewActionable(let _actionable: MonitorActionable) -> Void {
+	func registerNewActionable(_ _actionable: MonitorActionable) -> Void {
 		if (actionable != nil) {
 			actionable?.destroy() }
 		actionable = _actionable
@@ -73,21 +74,21 @@ class ActivityMonitor: NSObject {
 	
 	func disable() -> Void {
 		unregisterActionable()
-		if (timer.valid) {
+		if (timer.isValid) {
 			timer.invalidate() }
 	}
 	
 	/*
 	 * Initialize the NSTimer to our activity monitoring interval.
 	 */
-	private func setTimers() -> Void {
+	fileprivate func setTimers() -> Void {
 		
 		//Set the activityMonitor timer
-		var interval: NSTimeInterval = Double(monitorInterval * 60)
-		timer = NSTimer.scheduledTimerWithTimeInterval(
-			interval,
+		let interval: TimeInterval = Double(monitorInterval * 60)
+		timer = Timer.scheduledTimer(
+			timeInterval: interval,
 			target: self,
-			selector: "markActivity",
+			selector: #selector(ActivityMonitor.markActivity),
 			userInfo: nil,
 			repeats: true)
 		
@@ -113,7 +114,7 @@ class ActivityMonitor: NSObject {
 		//Activity was handled by the globalMonitorHandler.
 		//Inactivity needs to be handled here.
 		if (!activityInInterval) {
-			inactivityCount++
+			inactivityCount += 1
 			NSLog("markActivity() -> Inactive")
 			NSLog("\tInactivity Count: %d/%d", inactivityCount, inactivityThreshold)
 		}
@@ -141,7 +142,7 @@ class ActivityMonitor: NSObject {
 		activityInInterval = false
 		if (eventMonitor == nil) {
 			NSLog("markActivity() -> Re-establishing monitor")
-			eventMonitor = NSEvent.addGlobalMonitorForEventsMatchingMask(eventsToWatch, handler: globalMonitorHandler)
+			eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .flagsChanged, .scrollWheel, .leftMouseDown], handler: globalMonitorHandler) as AnyObject
 		}
 	}
 	
@@ -151,10 +152,10 @@ class ActivityMonitor: NSObject {
 	 * since we had the opposite of inactivity, and remove
 	 * the monitor since we are done for this interval.
 	 */
-	func globalMonitorHandler(let event: NSEvent!) -> Void {
+	func globalMonitorHandler(_ event: NSEvent!) -> Void {
 		NSLog("globalMonitorHandler()")
 		activityInInterval = true
-		activityCount++
+		activityCount += 1
 		activityCount += inactivityCount	//If inactive for a few counts, add back when we become active again.
 		inactivityCount = 0
 		
@@ -163,7 +164,7 @@ class ActivityMonitor: NSObject {
 		NSEvent.removeMonitor(eventMonitor!)
 		eventMonitor = nil
 		
-		if (!timer.valid) {
+		if (!timer.isValid) {
 			setTimers() }
 	}
 }

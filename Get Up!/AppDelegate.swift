@@ -19,11 +19,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		_inactivityThreshold: 3)
 	var notificationAlerter = NotificationAlerter()
 	
-	func applicationDidFinishLaunching(aNotification: NSNotification) {
+	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		activityMonitor.registerNewActionable(notificationAlerter)
 	}
 
-	func applicationWillTerminate(aNotification: NSNotification) {
+	func applicationWillTerminate(_ aNotification: Notification) {
 		activityMonitor.disable()
 	}
 
